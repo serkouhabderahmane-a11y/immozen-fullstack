@@ -1,0 +1,2 @@
+C:/Users/laptop 368/Desktop/my computer/code/websites/projects/immozen/android/app/.cxx/Debug/6e445s3s/x86/CMakeFiles/edit_cache.dir
+C:/Users/laptop 368/Desktop/my computer/code/websites/projects/immozen/android/app/.cxx/Debug/6e445s3s/x86/CMakeFiles/rebuild_cache.dir

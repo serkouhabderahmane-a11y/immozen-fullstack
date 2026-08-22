@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "761563886340",
+    "project_id": "mgpl-d9aa9",
+    "storage_bucket": "mgpl-d9aa9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761563886340:android:a0db0324f9c87bcb77d651",
+        "android_client_info": {
+          "package_name": "com.devarch.immozen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761563886340-53nopar6oiqht058ob6pp27ojb56rm15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB46nLtbd5Hu4UGhXBtCVZwHbOyJQFlyMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761563886340-53nopar6oiqht058ob6pp27ojb56rm15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
