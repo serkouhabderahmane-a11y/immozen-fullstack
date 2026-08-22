@@ -136,7 +136,7 @@ Route::middleware(['language'])->group(function () {
         Route::resource('language', LanguageController::class);
         Route::get('language_list', [LanguageController::class, 'show']);
         Route::post('language_update', [LanguageController::class, 'update'])->name('language_update');
-        Route::get('language-destory/{id}', [LanguageController::class, 'destroy'])->name('language.destroy');
+        Route::get('language-destory/{id}', [LanguageController::class, 'destroy']);
         Route::get('set-language/{lang}', [LanguageController::class, 'set_language']);
         Route::get('download-panel-file', [LanguageController::class, 'downloadPanelFile'])->name('download-panel-file');
         Route::get('download-app-file', [LanguageController::class, 'downloadAppFile'])->name('download-app-file');
