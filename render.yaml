@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: immozen-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://immozen-api.onrender.com
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TELESCOPE_ENABLED
+        value: "false"
+      - key: DEMO_MODE
+        value: "false"
