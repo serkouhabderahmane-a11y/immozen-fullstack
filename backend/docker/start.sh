@@ -27,8 +27,8 @@ if [ ! -f storage/.migrated ]; then
 fi
 
 php artisan storage:link >/dev/null 2>&1 || true
+rm -f bootstrap/cache/routes-v7.php
 php artisan config:cache
-php artisan route:cache >/dev/null 2>&1 || true
 php artisan view:cache
 
 exec apache2-foreground
