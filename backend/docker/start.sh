@@ -9,6 +9,8 @@ cd /var/www/html
 if [ ! -f .env ]; then
   cp .env.example .env
   sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
+  sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=${DB_CONNECTION:-sqlite}/" .env
+  if [ "${DB_CONNECTION:-sqlite}" = "sqlite" ]; then sed -i '/^DB_DATABASE=/d' .env; fi
   php artisan key:generate --force >/dev/null 2>&1 || true
 fi
 

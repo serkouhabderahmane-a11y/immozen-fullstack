@@ -23,10 +23,13 @@ WORKDIR /var/www/html
 
 COPY . .
 
+RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/app/public storage/logs bootstrap/cache database \
+    && touch database/database.sqlite
+
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress
 
 COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh && mkdir -p storage bootstrap/cache database
+RUN chmod +x /usr/local/bin/start.sh
 
 EXPOSE 8080
 

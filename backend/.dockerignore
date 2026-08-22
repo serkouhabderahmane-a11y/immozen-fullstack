@@ -1,0 +1,7 @@
+.env
+database/*.sqlite
+storage/
+bootstrap/cache/
+.git
+node_modules
+vendor
