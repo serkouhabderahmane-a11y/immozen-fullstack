@@ -25,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
         LogViewer::auth(function () {
             return auth()->check(); // Allow access only if the user is authenticated
         });
