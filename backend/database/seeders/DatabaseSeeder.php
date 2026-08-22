@@ -31,10 +31,18 @@ class DatabaseSeeder extends Seeder
 
         DB::table('languages')->insert(
             [
-                'name' => 'English',
-                'code' => 'en-new',
-                'file_name' => 'en-new.json',
-                'status' => '1',
+                [
+                    'name' => 'English',
+                    'code' => 'en-new',
+                    'file_name' => 'en-new.json',
+                    'status' => '1',
+                ],
+                [
+                    'name' => 'Français',
+                    'code' => 'fr-new',
+                    'file_name' => 'fr-new.json',
+                    'status' => '1',
+                ],
             ],
         );
 
@@ -55,7 +63,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                     'type' => 'default_language',
-                    'data' => 'en-new'
+                    'data' => 'fr-new'
                 ],
                 [
                     'type' => 'force_update',
