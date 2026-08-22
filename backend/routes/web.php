@@ -178,7 +178,7 @@ Route::middleware(['language'])->group(function () {
 
         Route::resource('slider', SliderController::class);
         // Route::post('slider-order', [SliderController::class, 'update'])->name('slider.slider-order');
-        Route::get('slider-destroy/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
+        Route::get('slider-destroy/{id}', [SliderController::class, 'destroy'])->name('slider.delete');
         Route::get('sliderList', [SliderController::class, 'sliderList']);
         /// END :: SLIDER ROUTE
 
@@ -187,7 +187,7 @@ Route::middleware(['language'])->group(function () {
         Route::resource('article', ArticleController::class);
         Route::get('article_list', [ArticleController::class, 'show'])->name('article_list');
         Route::get('add_article', [ArticleController::class, 'create'])->name('add_article');
-        Route::delete('article-destroy/{id}', [ArticleController::class, 'destroy'])->name('article.destroy');
+        Route::delete('article-destroy/{id}', [ArticleController::class, 'destroy'])->name('article.delete');
         Route::post('article/generate-slug', [ArticleController::class, 'generateAndCheckSlug'])->name('article.generate-slug');
         /// END :: ARTICLE ROUTE
 
@@ -233,7 +233,7 @@ Route::middleware(['language'])->group(function () {
         Route::resource('outdoor_facilities', OutdoorFacilityController::class);
         Route::get('facility-list', [OutdoorFacilityController::class, 'show']);
         Route::post('facility-update', [OutdoorFacilityController::class, 'update']);
-        Route::get('facility-delete/{id}', [OutdoorFacilityController::class, 'destroy'])->name('outdoor_facilities.destroy');
+        Route::get('facility-delete/{id}', [OutdoorFacilityController::class, 'destroy'])->name('outdoor_facilities.delete');
         /// END :: OUTDOOR FACILITY ROUTE
 
 
@@ -250,7 +250,7 @@ Route::middleware(['language'])->group(function () {
         Route::post('updatepropertystatus', [PropertController::class, 'updateStatus'])->name('updatepropertystatus');
         Route::post('property-gallery', [PropertController::class, 'removeGalleryImage'])->name('property.removeGalleryImage');
         Route::get('get-state-by-country', [PropertController::class, 'getStatesByCountry'])->name('property.getStatesByCountry');
-        Route::get('property-destroy/{id}', [PropertController::class, 'destroy'])->name('property.destroy');
+        Route::get('property-destroy/{id}', [PropertController::class, 'destroy'])->name('property.delete');
         Route::get('getFeaturedPropertyList', [PropertController::class, 'getFeaturedPropertyList']);
         Route::post('updateaccessability', [PropertController::class, 'updateaccessability'])->name('updateaccessability');
         Route::post('update-property-request-status', [PropertController::class, 'updateRequestStatus'])->name('update-property-request-status');
@@ -306,7 +306,7 @@ Route::middleware(['language'])->group(function () {
 
         /// START :: SEO SETTINGS
         Route::resource('seo_settings', SeoSettingsController::class);
-        Route::get('seo-settings-destroy/{id}', [SeoSettingsController::class, 'destroy'])->name('seo_settings.destroy');
+        Route::get('seo-settings-destroy/{id}', [SeoSettingsController::class, 'destroy'])->name('seo_settings.delete');
         /// END :: SEO SETTINGS
 
         /// START :: FAQs

@@ -134,7 +134,7 @@ class ArticleController extends Controller
             $row = (object)$row;
 
             $operate = BootstrapTableService::editButton(route('article.edit',$row->id), false, null, null, null, null);
-            $operate .= BootstrapTableService::deleteAjaxButton(route('article.destroy', $row->id));
+            $operate .= BootstrapTableService::deleteAjaxButton(route('article.delete', $row->id));
 
             $tempRow = $row->toArray();
             $tempRow['category_title'] = $row->category_id == 0 ? 'General' : $row->category->category;

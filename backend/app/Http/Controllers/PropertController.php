@@ -635,7 +635,7 @@ class PropertController extends Controller
                     $operate = BootstrapTableService::editButton(route('property.edit', $row->id), false);
                 }
                 if (has_permissions('delete', 'property')) {
-                    $operate .= BootstrapTableService::deleteButton(route('property.destroy', $row->id));
+                    $operate .= BootstrapTableService::deleteButton(route('property.delete', $row->id));
                 }
             }else{
                 if (has_permissions('update', 'property')) {
@@ -644,7 +644,7 @@ class PropertController extends Controller
                     $operate = BootstrapTableService::button('fa fa-exclamation-circle', '',$requestStatusButtonCustomClasses,$requestStatusButtonCustomAttributes);
                 }
                 if (has_permissions('delete', 'property')) {
-                    $operate .= BootstrapTableService::deleteButton(route('property.destroy', $row->id));
+                    $operate .= BootstrapTableService::deleteButton(route('property.delete', $row->id));
                 }
             }
 

@@ -103,7 +103,7 @@ class OutdoorFacilityController extends Controller
             if (has_permissions('update', 'near_by_places')) {
 
                 $operate = BootstrapTableService::editButton('', true, null, null, $row->id, null);
-                $operate .= BootstrapTableService::deleteButton(route('outdoor_facilities.destroy', $row->id));
+                $operate .= BootstrapTableService::deleteButton(route('outdoor_facilities.delete', $row->id));
                 $tempRow['operate'] = $operate;
             }
             $rows[] = $tempRow;

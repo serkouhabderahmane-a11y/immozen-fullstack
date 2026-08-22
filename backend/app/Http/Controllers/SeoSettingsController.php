@@ -139,7 +139,7 @@ class SeoSettingsController extends Controller
 
 
             $operate = BootstrapTableService::editButton('', true, null, null, $row->id);
-            $operate .= BootstrapTableService::deleteButton(route('seo_settings.destroy', $row->id), $row->id);
+            $operate .= BootstrapTableService::deleteButton(route('seo_settings.delete', $row->id), $row->id);
 
             $tempRow['operate'] = $operate;
 
