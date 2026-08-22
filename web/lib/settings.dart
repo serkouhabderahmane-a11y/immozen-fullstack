@@ -12,7 +12,7 @@ class AppSettings {
   static const String androidPackageName = 'com.devarch.immozen';
 
   ///API Setting
-  static const String hostUrl = 'http://localhost:8000/';
+  static const String hostUrl = 'https://immozen-fullstack.onrender.com/';
 
   static const int apiDataLoadLimit = 10;
   static const int maxCategoryShowLengthInHomeScreen = 5;
