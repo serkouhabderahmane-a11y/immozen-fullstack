@@ -4,24 +4,7 @@
              <a href="#" class="burger-btn d-block">
                  <i class="bi bi-justify fs-3"></i>
              </a>
-            @php
-                $emailConfigStatus = DB::table('settings')->select('data')->where('type','email_configuration_verification')->first();
-                if($emailConfigStatus){
-                    $data = $emailConfigStatus->data;
-                }else{
-                    $data = 0;
-                }
-            @endphp
-            @if($data == 0)
-                @if(has_permissions('update', 'email_configurations'))
-                    <div class="mx-auto order-0">
-                        <div class="alert alert-danger my-2" role="alert">
-                            <i class="fa fa-exclamation"></i> {{ __("Email Configration is not verified") }} <a href="{{route('email-configurations-index')}}" class="alert-link">{{ __("Click here to redirect to email configration") }}</a>.
-                        </div>
-                    </div>
-                @endif
-            @endif
-             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                  aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon"></span>
