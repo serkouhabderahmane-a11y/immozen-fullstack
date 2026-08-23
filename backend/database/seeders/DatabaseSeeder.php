@@ -51,11 +51,11 @@ class DatabaseSeeder extends Seeder
             [
                 [
                     'type' => 'company_name',
-                    'data' => 'eBroker'
+                    'data' => 'Immozen'
                 ],
                 [
                     'type' => 'currency_symbol',
-                    'data' => '$'
+                    'data' => '€'
                 ],
                 [
                     'type' => 'ios_version',
@@ -115,11 +115,11 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                     'type' => 'company_logo',
-                    'data' => 'logo.png',
+                    'data' => 'homeLogo.svg',
                 ],
                 [
                     'type' => 'web_logo',
-                    'data' => 'web_logo.png',
+                    'data' => 'homeLogo.svg',
                 ],
                 [
                     'type' => 'favicon_icon',
@@ -135,18 +135,44 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                     'type' => 'app_home_screen',
-                    'data' => 'homeLogo.png',
+                    'data' => 'homeLogo.svg',
                 ],
                 [
                     'type' => 'placeholder_logo',
-                    'data' => 'placeholder.png',
+                    'data' => 'placeholder.svg',
                 ],
                 [
                     'type' => 'system_color',
                     'data' => '#087c7c',
                 ],
+                [
+                    'type' => 'light_primary',
+                    'data' => '#FAFAFA',
+                ],
+                [
+                    'type' => 'light_secondary',
+                    'data' => '#FFFFFF',
+                ],
+                [
+                    'type' => 'light_tertiary',
+                    'data' => '#087C7C',
+                ],
+                [
+                    'type' => 'dark_primary',
+                    'data' => '#0C0C0C',
+                ],
+                [
+                    'type' => 'dark_secondary',
+                    'data' => '#1C1C1C',
+                ],
+                [
+                    'type' => 'dark_tertiary',
+                    'data' => '#53ADAE',
+                ],
             ]
         );
+
+        $this->call(DemoContentSeeder::class);
     }
 }
 

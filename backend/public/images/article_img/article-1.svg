@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0C0C0C"/>
+      <stop offset="1" stop-color="#4D5454"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="600" fill="url(#g)"/>
+  <circle cx="1000" cy="0" r="600" fill="#ffffff" opacity="0.06"/>
+  <circle cx="0" cy="600" r="360" fill="#000000" opacity="0.10"/>
+  <path d="M 462 306 l 38 -30 l 38 30 l -12 0 v 28 h -52 v -28 z" fill="#ffffff" opacity="0.92"/>
+  <text x="50%" y="382" font-family="Arial, Helvetica, sans-serif" font-size="45" font-weight="bold" fill="#ffffff" text-anchor="middle">Le marché immobilier français en 2026 : tendances et perspectives</text>
+  <text x="50%" y="418" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#ffffff" opacity="0.85" text-anchor="middle">Conseils Immozen</text>
+</svg>

@@ -582,7 +582,7 @@
                                 <label class="form-label">{{ __('Comapany Logo') }}</label>
                                 <button class="bottomleft btn btn-primary btn_comapany_logo" type="button">+</button>
                                 <input accept="image/*" name='company_logo' type='file' id="company_logo" style="display: none" />
-                                <img id="blah_comapany_logo" style="margin: 5%;background: #f7f7f7;height:70px;width:200px;" src="{{ url('assets/images/logo/' . (system_setting('company_logo') ? system_setting('company_logo') : 'logo.png')) }}" />
+                                <img id="blah_comapany_logo" style="margin: 5%;background: #f7f7f7;height:70px;width:200px;" src="{{ url('assets/images/logo/' . (system_setting('company_logo') ? system_setting('company_logo') : 'homeLogo.svg')) }}" />
                             </div>
 
                             {{-- Login Page Image --}}

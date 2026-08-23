@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 return [
-    'icon' => '/assets/images/logo/mainlogo.svg',
+    'icon' => '/assets/images/logo/homeLogo.svg',
 
     'background' => '/images/default/background.jpg',
 

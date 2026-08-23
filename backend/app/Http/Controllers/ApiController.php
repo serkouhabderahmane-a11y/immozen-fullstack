@@ -108,7 +108,7 @@ class ApiController extends Controller
                 }
             } else if ($row->type == 'company_logo') {
 
-                $tempRow[$row->type] = url('/assets/images/logo/logo.png');
+                $tempRow[$row->type] = url('/assets/images/logo/homeLogo.svg');
             } else if ($row->type == 'web_logo' || $row->type == 'web_placeholder_logo' || $row->type == 'app_home_screen' || $row->type == 'web_footer_logo' || $row->type == 'placeholder_logo' || $row->type == 'favicon_icon') {
 
 
@@ -4388,7 +4388,7 @@ class ApiController extends Controller
                     // Change data according to conditions
                     if ($row->type == 'company_logo') {
                         // Add logo image with its url
-                        $settingsData[$row->type] = url('/assets/images/logo/logo.png');
+                        $settingsData[$row->type] = url('/assets/images/logo/homeLogo.svg');
                     } else if ($row->type == 'seo_settings') {
                         // Change Value to Bool
                         $settingsData[$row->type] = $row->data == 1 ? true : false;

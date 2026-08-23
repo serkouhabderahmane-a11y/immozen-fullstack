@@ -35,7 +35,7 @@
                                             <label class="form-label">{{ __('Main Logo') }}</label>
                                             <button class="bottomleft btn btn-primary web_logo_btn" type="button">+</button>
                                             <input accept="image/*" name='web_logo' type='file' id="web_logo" style="display: none" />
-                                            <img id="blah_web_logo" height="80" width="150" style="margin-left: 5%;background: #f7f7f7; padding:10px" src="{{ url('assets/images/logo/' . (system_setting('web_logo') ? system_setting('web_logo') : 'web_logo.png')) }}" />
+                                            <img id="blah_web_logo" height="80" width="150" style="margin-left: 5%;background: #f7f7f7; padding:10px" src="{{ url('assets/images/logo/' . (system_setting('web_logo') ? system_setting('web_logo') : 'homeLogo.svg')) }}" />
                                         </div>
 
                                         {{-- Placeholder Image --}}
@@ -51,7 +51,7 @@
                                             <label class="form-label">{{ __('Footer Logo') }}</label>
                                             <button class="bottomleft btn btn-primary web_footer_logo_btn" type="button">+</button>
                                             <input accept="image/*" name='web_footer_logo' type='file' id="web_footer_logo" style="display: none" />
-                                            <img id="blah_web_footer_logo" height="80" width="150" style="margin-left: 5%;background: #f7f7f7; padding:10px" src="{{ url('assets/images/logo/' . (system_setting('web_footer_logo') ? system_setting('web_footer_logo') : 'web_footer_logo.png')) }}" />
+                                            <img id="blah_web_footer_logo" height="80" width="150" style="margin-left: 5%;background: #f7f7f7; padding:10px" src="{{ url('assets/images/logo/' . (system_setting('web_footer_logo') ? system_setting('web_footer_logo') : 'Logo_white.svg')) }}" />
                                         </div>
                                     </div>
                                 </div>

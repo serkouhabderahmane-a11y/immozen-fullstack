@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#087C7C"/>
+      <stop offset="1" stop-color="#0C0C0C"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="300" fill="url(#g)"/>
+  <circle cx="300" cy="0" r="300" fill="#ffffff" opacity="0.06"/>
+  <circle cx="0" cy="300" r="180" fill="#000000" opacity="0.10"/>
+  <path d="M 112 156 l 38 -30 l 38 30 l -12 0 v 28 h -52 v -28 z" fill="#ffffff" opacity="0.92"/>
+  <text x="50%" y="232" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#ffffff" text-anchor="middle">EB</text>
+  <text x="50%" y="268" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#ffffff" opacity="0.85" text-anchor="middle">Immozen</text>
+</svg>
