@@ -200,17 +200,50 @@ class ApiController extends Controller
         }
         $type = $request->type;
         if($type == 3){
-            $email = $request->email;
+            $email = strtolower(trim($request->email));
             $user = Customer::where(['email' => $email, 'logintype' => 3])->first();
 
             if($user){
                 if(!Hash::check($request->password, $user->password)){
                     ApiResponseService::validationError("Invalid Password");
-                }else if($user->is_email_verified == false){
-                    ApiResponseService::validationError("Email is not verified");
                 }
             }else{
-                ApiResponseService::validationError("Invalid Email");
+                // Account does not exist: create it on the fly, then log in
+                $registerValidator = Validator::make($request->all(), [
+                    'password' => 'required|min:6',
+                    'email' => 'required|email',
+                ]);
+                if ($registerValidator->fails()) {
+                    ApiResponseService::validationError($registerValidator->errors()->first());
+                }
+
+                $saveCustomer = new Customer();
+                $saveCustomer->name = isset($request->name) ? $request->name : '';
+                $saveCustomer->email = $email;
+                $saveCustomer->mobile = isset($request->mobile) ? $request->mobile : '';
+                $saveCustomer->address = isset($request->address) ? $request->address : '';
+                $saveCustomer->slug_id = generateUniqueSlug(isset($request->name) && !empty($request->name) ? $request->name : $email, 5);
+                $saveCustomer->logintype = 3;
+                $saveCustomer->auth_id = (string) Str::uuid();
+                $saveCustomer->password = Hash::make($request->password);
+                $saveCustomer->is_email_verified = 1;
+                $saveCustomer->isActive = '1';
+                $saveCustomer->notification = 1;
+                $saveCustomer->subscription = 0;
+                $saveCustomer->about_me = '';
+                $saveCustomer->facebook_id = '';
+                $saveCustomer->twiiter_id = '';
+                $saveCustomer->instagram_id = '';
+                $saveCustomer->latitude = isset($request->latitude) ? $request->latitude : '';
+                $saveCustomer->longitude = isset($request->longitude) ? $request->longitude : '';
+                $saveCustomer->city = '';
+                $saveCustomer->state = '';
+                $saveCustomer->country = '';
+                $saveCustomer->fcm_id = '';
+                $saveCustomer->api_token = null;
+                $saveCustomer->save();
+
+                $user = $saveCustomer->fresh();
             }
 
             $auth_id = $user->auth_id;
