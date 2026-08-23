@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class DemoContentSeeder extends Seeder
 {
@@ -224,7 +225,8 @@ SVG;
                 'profile' => $avatar,
                 'address' => $address,
                 'fcm_id' => '',
-                'logintype' => 'email',
+                'logintype' => '3',
+                'password' => Hash::make('immozen123'),
                 'isActive' => 1,
                 'api_token' => null,
                 'notification' => 1,
