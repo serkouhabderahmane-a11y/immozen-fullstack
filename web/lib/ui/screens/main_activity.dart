@@ -68,7 +68,6 @@ class MainActivity extends StatefulWidget {
 class MainActivityState extends State<MainActivity>
     with TickerProviderStateMixin {
   int currtab = 0;
-  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final List _pageHistory = [];
   late PageController pageController;
   DateTime? currentBackPressTime;

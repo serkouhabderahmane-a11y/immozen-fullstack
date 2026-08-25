@@ -7,7 +7,6 @@ import 'package:immozen/data/repositories/auth_repository.dart';
 import 'package:immozen/settings.dart';
 import 'package:immozen/utils/Extensions/extensions.dart';
 import 'package:immozen/utils/hive_keys.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -242,33 +241,12 @@ class HiveUtils {
     bool? isRedirect,
   }) async {
     try {
-      final L = HiveUtils.getUserLoginType();
-      if (L == LoginType.phone &&
-          AppSettings.otpServiceProvider == 'firebase') {
-        await AuthRepository().beforeLogout();
-        await FirebaseAuth.instance.signOut();
-        await setUserIsNotAuthenticated();
-        await Hive.box(HiveKeys.userDetailsBox).clear();
-        onLogout.call();
-        await HiveUtils.setUserIsNotAuthenticated();
-        await HiveUtils.clear();
-      }
-      if (L == LoginType.apple || L == LoginType.google) {
-        await AuthRepository().beforeLogout();
-        await FirebaseAuth.instance.signOut();
-        await setUserIsNotAuthenticated();
-        await Hive.box(HiveKeys.userDetailsBox).clear();
-        onLogout.call();
-        await HiveUtils.setUserIsNotAuthenticated();
-        await HiveUtils.clear();
-      }
-      if (L == LoginType.phone && AppSettings.otpServiceProvider == 'twilio') {
-        await setUserIsNotAuthenticated();
-        await Hive.box(HiveKeys.userDetailsBox).clear();
-        onLogout.call();
-        await HiveUtils.setUserIsNotAuthenticated();
-        await HiveUtils.clear();
-      }
+      await AuthRepository().beforeLogout();
+      await setUserIsNotAuthenticated();
+      await Hive.box(HiveKeys.userDetailsBox).clear();
+      onLogout.call();
+      await HiveUtils.setUserIsNotAuthenticated();
+      await HiveUtils.clear();
       await Future.delayed(
         Duration.zero,
         () {

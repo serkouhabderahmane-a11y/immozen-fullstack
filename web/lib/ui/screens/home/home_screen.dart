@@ -185,35 +185,12 @@ class HomeScreenState extends State<HomeScreen>
     setState(() {});
   }
 void initializeFCMToken() async {
-  // Request permissions for iOS (important!)
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission();
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    // For iOS, make sure APNS token is set before getting FCM token
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-      if (apnsToken == null) {
-        log("APNS token not yet available, retrying in 2 seconds...");
-        Future.delayed(Duration(seconds: 2), initializeFCMToken); // Retry after delay
-        return;
-      }
-    }
-
-    // Now safe to get FCM token
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    log("FCM Token: $fcmToken");
-  } else {
-    log("Notification permission denied");
-  }
+  log('initializeFCMToken called (Firebase Messaging removed)');
 }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    initializeFCMToken();
-    /*FirebaseMessaging.instance.getToken().then((value) {
-      log('FCM:$value');
-    });*/
     final homeScreenState = homeStateListener.listen(context);
     HiveUtils.getJWT()?.log('JWT');
 

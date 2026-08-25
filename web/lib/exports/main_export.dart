@@ -95,8 +95,7 @@ export 'package:immozen/utils/payment/lib/list_gatways.dart';
 export 'package:immozen/utils/ui_utils.dart';
 export 'package:immozen/utils/video_player/ytb.dart';
 export 'package:file_picker/file_picker.dart';
-export 'package:firebase_core/firebase_core.dart';
-export 'package:firebase_messaging/firebase_messaging.dart';
+
 export 'package:flick_video_player/flick_video_player.dart';
 export 'package:flutter/services.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';

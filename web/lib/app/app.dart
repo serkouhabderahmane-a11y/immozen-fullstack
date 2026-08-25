@@ -1,7 +1,6 @@
 import 'package:immozen/data/cubits/home_page_data_cubit.dart';
 import 'package:immozen/exports/main_export.dart';
 import 'package:flutter/material.dart';
-import 'package:immozen/firebase_options.dart';
 
 PersonalizedInterestSettings personalizedInterestSettings =
     PersonalizedInterestSettings.empty();
@@ -26,14 +25,6 @@ Future<void> initApp() async {
 
   ///This is the widget to show uncaught runtime error in this custom widget so that user can know in that screen something is wrong instead of grey screen
   SomethingWentWrong.asGlobalErrorBuilder();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  FirebaseMessaging.onBackgroundMessage(
-    NotificationService.onBackgroundMessageHandler,
-  );
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {

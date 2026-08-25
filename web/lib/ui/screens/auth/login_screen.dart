@@ -2,10 +2,6 @@ import 'package:country_picker/country_picker.dart';
 import 'package:immozen/data/model/system_settings_model.dart';
 import 'package:immozen/data/repositories/auth_repository.dart';
 import 'package:immozen/exports/main_export.dart';
-import 'package:immozen/utils/login/apple_login/apple_login.dart';
-import 'package:immozen/utils/login/google_login/google_login.dart';
-import 'package:immozen/utils/login/lib/login_status.dart';
-import 'package:immozen/utils/login/lib/login_system.dart';
 import 'package:immozen/utils/strings.dart';
 import 'package:immozen/utils/validator.dart';
 import 'package:flutter/gestures.dart';
@@ -76,55 +72,10 @@ class LoginScreenState extends State<LoginScreen> {
   bool isLoginButtonDisabled = true;
   String otpIs = '';
 
-  MMultiAuthentication loginSystem = MMultiAuthentication({
-    'google': GoogleLogin(),
-    'apple': AppleLogin(),
-  });
-
   @override
   void initState() {
     super.initState();
     context.read;
-    loginSystem
-      ..init()
-      ..setContext(context)
-      ..listen((MLoginState state) {
-        if (state is MProgress) {
-          //unawaited(Widgets.showLoader(context));
-        }
-
-        if (state is MSuccess) {
-          Widgets.hideLoder(context);
-          if (widget.isDeleteAccount ?? false) {
-            context.read<DeleteAccountCubit>().deleteUserAccount(
-                  context,
-                );
-          } else {
-            context.read<LoginCubit>().login(
-                  type: LoginType.values
-                      .firstWhere((element) => element.name == state.type),
-                  name: state.credentials.user?.displayName ??
-                      state.credentials.user?.providerData.first.displayName,
-                  email: state.credentials.user?.providerData.first.email,
-                  phoneNumber:
-                      state.credentials.user?.providerData.first.phoneNumber,
-                  uniqueId: state.credentials.user!.uid,
-                  countryCode: countryCode,
-                );
-          }
-        }
-
-        if (state is MFail) {
-          Widgets.hideLoder(context);
-          if (state.error.toString() != 'google-terminated') {
-            HelperUtils.showSnackBarMessage(
-              context,
-              state.error.toString(),
-              type: MessageType.error,
-            );
-          }
-        }
-      });
     context.read<FetchSystemSettingsCubit>().fetchSettings(
           isAnonymouse: true,
           forceRefresh: true,
@@ -218,15 +169,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   void resendOTP() {
-    if (isOtpSent && AppSettings.otpServiceProvider == 'firebase') {
-      context.read<SendOtpCubit>().sendFirebaseOTP(
-            phoneNumber: '+${countryCode!}${mobileNumController.text}',
-          );
-    } else if (isOtpSent && AppSettings.otpServiceProvider == 'twilio') {
-      context.read<SendOtpCubit>().sendTwilioOTP(
-            phoneNumber: '+${countryCode!}${mobileNumController.text}',
-          );
-    }
+    debugPrint('resendOTP called (phone OTP removed)');
   }
 
   Future<void> startTimer() async {
@@ -246,44 +189,8 @@ class LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
-  Future<void> _onGoogleTap() async {
-    try {
-      await loginSystem.setActive('google');
-      await loginSystem.login();
-    } catch (e) {
-      HelperUtils.showSnackBarMessage(
-        context,
-        'googleLoginFailed'.translate(context),
-        type: MessageType.error,
-      );
-      return;
-    }
-
-    Navigator.pushNamed(context, Routes.main, arguments: {'from': 'login'});
-  }
-
-  Future<void> _onTapAppleLogin() async {
-    try {
-      await loginSystem.setActive('apple');
-      await loginSystem.login();
-    } catch (e) {
-      print(e);
-      HelperUtils.showSnackBarMessage(
-        context,
-        'appleLoginFailed'.translate(context),
-        type: MessageType.error,
-      );
-      return;
-    }
-
-    Navigator.pushNamed(context, Routes.main, arguments: {'from': 'login'});
-  }
-
   @override
   Widget build(BuildContext context) {
-    final phoneLogin = context
-        .read<FetchSystemSettingsCubit>()
-        .getSetting(SystemSetting.numberWithOtpLogin);
     size = MediaQuery.of(context).size;
     if (context.watch<FetchSystemSettingsCubit>().state
         is FetchSystemSettingsSuccess) {
@@ -310,33 +217,6 @@ class LoginScreenState extends State<LoginScreen> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 automaticallyImplyLeading: false,
-                leadingWidth: 100 + 14,
-                leading: !AppSettings.disableCountrySelection &&
-                        phoneLogin == '1'
-                    ? Visibility(
-                        visible: !isOtpSent,
-                        child: FittedBox(
-                          fit: BoxFit.none,
-                          child: GestureDetector(
-                            onTap: showCountryCode,
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: context.color.tertiaryColor
-                                      .withOpacity(0.1),
-                                  child: Text(flagEmoji ?? ''),
-                                ),
-                                UiUtils.getSvg(
-                                  AppIcons.downArrow,
-                                  color: context.color.textLightColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
                 actions: [
                   Builder(
                     builder: (context) {
@@ -478,16 +358,6 @@ class LoginScreenState extends State<LoginScreen> {
                         );
 
                     if (widget.popToCurrent == true) {
-                      //Navigate to Edit profile field
-                      /*  await Navigator.pushNamed(
-                        context,
-                        Routes.completeProfile,
-                        arguments: {
-                          'from': 'login',
-                          'popToCurrent': widget.popToCurrent,
-                          'phoneNumber': mobileNumController.text,
-                        },
-                      );*/
                       await Navigator.pushReplacementNamed(
                         context,
                         Routes.main,
@@ -496,16 +366,6 @@ class LoginScreenState extends State<LoginScreen> {
                         },
                       );
                     } else {
-                      //Navigate to Edit profile field
-                      /*await Navigator.pushReplacementNamed(
-                        context,
-                        Routes.completeProfile,
-                        arguments: {
-                          'from': 'login',
-                          'popToCurrent': widget.popToCurrent,
-                          'phoneNumber': mobileNumController.text,
-                        },
-                      );*/
                       await Navigator.pushReplacementNamed(
                         context,
                         Routes.main,
@@ -517,101 +377,9 @@ class LoginScreenState extends State<LoginScreen> {
                   }
                 }
               },
-              child: BlocListener<DeleteAccountCubit, DeleteAccountState>(
-                listener: (context, state) {
-                  if (state is DeleteAccountProgress) {
-                    Widgets.hideLoder(context);
-                    // Widgets.showLoader(context);
-                  }
-                  if (state is AccountDeleted) {
-                    Widgets.hideLoder(context);
-                  }
-                },
-                child: BlocListener<VerifyOtpCubit, VerifyOtpState>(
-                  listener: (context, state) {
-                    if (state is VerifyOtpInProgress) {
-                      Widgets.showLoader(context);
-                    } else {
-                      if (widget.isDeleteAccount ?? false) {
-                      } else {
-                        Widgets.hideLoder(context);
-                      }
-                    }
-                    if (state is VerifyOtpFailure) {
-                      HelperUtils.showSnackBarMessage(
-                        context,
-                        state.errorMessage,
-                        type: MessageType.error,
-                      );
-                    }
-
-                    if (state is VerifyOtpSuccess) {
-                      if (widget.isDeleteAccount ?? false) {
-                        context.read<DeleteAccountCubit>().deleteUserAccount(
-                              context,
-                            );
-                      } else if (AppSettings.otpServiceProvider == 'firebase') {
-                        context.read<LoginCubit>().login(
-                              type: LoginType.phone,
-                              phoneNumber: state.credential!.user!.phoneNumber,
-                              uniqueId: state.credential!.user!.uid,
-                              countryCode: countryCode,
-                            );
-                      } else if (AppSettings.otpServiceProvider == 'twilio') {
-                        context.read<LoginCubit>().login(
-                              type: LoginType.phone,
-                              phoneNumber: mobileNumController.text,
-                              uniqueId: state.authId!,
-                              countryCode: countryCode,
-                            );
-                      }
-                    }
-                  },
-                  child: BlocListener<SendOtpCubit, SendOtpState>(
-                    listener: (context, state) {
-                      if (state is SendOtpInProgress) {
-                        Widgets.showLoader(context);
-                      } else {
-                        if (widget.isDeleteAccount ?? false) {
-                        } else {
-                          Widgets.hideLoder(context);
-                        }
-                      }
-
-                      if (state is SendOtpSuccess) {
-                        startTimer();
-                        isOtpSent = true;
-                        if (isOtpSent) {
-                          HelperUtils.showSnackBarMessage(
-                            context,
-                            UiUtils.translate(
-                              context,
-                              'optsentsuccessflly',
-                            ),
-                            type: MessageType.success,
-                          );
-                        }
-                        otpVerificationId = state.verificationId;
-                        setState(() {});
-
-                        // context.read<SendOtpCubit>().setToInitial();
-                      }
-                      if (state is SendOtpFailure) {
-                        HelperUtils.showSnackBarMessage(
-                          context,
-                          state.errorMessage,
-                          type: MessageType.error,
-                        );
-                      }
-                    },
-                    child: Form(
-                      key: _formKey,
-                      child: isOtpSent
-                          ? buildOtpVerificationScreen()
-                          : buildLoginScreen(context),
-                    ),
-                  ),
-                ),
+              child: Form(
+                key: _formKey,
+                child: buildLoginScreen(context),
               ),
             ),
           ),
@@ -1127,17 +895,9 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginContent(BuildContext context) {
-    final phoneLogin = context
-        .read<FetchSystemSettingsCubit>()
-        .getSetting(SystemSetting.numberWithOtpLogin);
-    final socialLogin = context
-        .read<FetchSystemSettingsCubit>()
-        .getSetting(SystemSetting.socialLogin);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //   if (socialLogin == '0') ...[
         _buildTitle(context),
         SizedBox(height: 15.rh(context)),
         _buildSubtitle(context),
@@ -1145,28 +905,6 @@ class LoginScreenState extends State<LoginScreen> {
         buildLoginForm(),
         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
         buildNextButton(context),
-        SizedBox(height: 20.rh(context)),
-        Center(child: Text('orContinueWith'.translate(context))),
-        SizedBox(height: 20.rh(context)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (defaultTargetPlatform == TargetPlatform.iOS)
-              _buildSocialButton(
-                context: context,
-                icon: AppIcons.apple,
-                onTap: _onTapAppleLogin,
-              ),
-            const SizedBox(width: 10),
-            _buildSocialButton(
-              context: context,
-              icon: AppIcons.google,
-              onTap: _onGoogleTap,
-            ),
-          ],
-        ),
-        /*  ],
-        if (socialLogin == '1') _buildSocialLoginSection(context, phoneLogin),*/
         SizedBox(height: 20.rh(context)),
         buildTermsAndPrivacyWidget(),
       ],
@@ -1184,218 +922,6 @@ class LoginScreenState extends State<LoginScreen> {
     return Text(UiUtils.translate(context, 'weSendYouCode'))
         .size(context.font.large)
         .color(context.color.textColorDark.withOpacity(0.8));
-  }
-
-  Widget _buildSocialLoginSection(BuildContext context, String phoneLogin) {
-    if (phoneLogin == '0') {
-      return Column(
-        children: <Widget>[
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  UiUtils.translate(context, 'loginToYourAccount'),
-                  style: TextStyle(
-                    color: context.color.textColorDark,
-                  ),
-                )
-                    .setMaxLines(lines: 2)
-                    .size(context.font.xxLarge)
-                    .bold(weight: FontWeight.w700)
-                    .color(context.color.textColorDark),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20.rh(context),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  UiUtils.translate(context, 'loginSecurelyWith'),
-                  style: TextStyle(
-                    color: context.color.textColorDark,
-                  ),
-                ).size(context.font.large).color(context.color.textColorDark),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20.rh(context),
-          ),
-          SizedBox(
-            height: 20.rh(context),
-          ),
-          if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-            GestureDetector(
-              onTap: () {
-                HelperUtils.unfocus();
-                _onTapAppleLogin();
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: context.color.secondaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: context.color.borderColor,
-                    width: 1.5,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    FittedBox(
-                      fit: BoxFit.none,
-                      child: SvgPicture.asset(
-                        AppIcons.apple,
-                        height: 25,
-                        width: 25,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      UiUtils.translate(context, 'signInWithApple'),
-                      style: TextStyle(
-                        color: context.color.textColorDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              UiUtils.translate(context, 'or'),
-              style: TextStyle(
-                color: context.color.textColorDark,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-          GestureDetector(
-            onTap: () {
-              HelperUtils.unfocus();
-              _onGoogleTap.call();
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 50,
-              decoration: BoxDecoration(
-                color: context.color.secondaryColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: context.color.borderColor,
-                  width: 1.5,
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  FittedBox(
-                    fit: BoxFit.none,
-                    child: SvgPicture.asset(
-                      AppIcons.google,
-                      height: 25,
-                      width: 25,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    UiUtils.translate(context, 'signInWithGoogle'),
-                    style: TextStyle(
-                      color: context.color.textColorDark,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTitle(context),
-          SizedBox(height: 15.rh(context)),
-          _buildSubtitle(context),
-          SizedBox(height: 41.rh(context)),
-          buildLoginForm(),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-          buildNextButton(context),
-          SizedBox(height: 20.rh(context)),
-          Center(child: Text('orContinueWith'.translate(context))),
-          SizedBox(height: 20.rh(context)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (defaultTargetPlatform == TargetPlatform.iOS)
-                _buildSocialButton(
-                  context: context,
-                  icon: AppIcons.apple,
-                  onTap: _onTapAppleLogin,
-                ),
-              const SizedBox(width: 10),
-              _buildSocialButton(
-                context: context,
-                icon: AppIcons.google,
-                onTap: _onGoogleTap,
-              ),
-            ],
-          ),
-        ],
-      );
-    }
-  }
-
-  Widget _buildSocialButton({
-    required BuildContext context,
-    required String icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HelperUtils.unfocus();
-        onTap();
-      },
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          color: context.color.secondaryColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: context.color.borderColor,
-            width: 1.5,
-          ),
-        ),
-        child: FittedBox(
-          fit: BoxFit.none,
-          child: SvgPicture.asset(
-            icon,
-            height: 25,
-            width: 25,
-          ),
-        ),
-      ),
-    );
   }
 
   Widget resendOtpTimerWidget() {
@@ -1511,117 +1037,11 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> sendVerificationCode({String? number}) async {
-    if (AppSettings.otpServiceProvider == 'twilio' &&
-        (widget.isDeleteAccount ?? false)) {
-      try {
-        await context
-            .read<SendOtpCubit>()
-            .sendTwilioOTP(phoneNumber: '+$number');
-      } catch (e) {
-        Widgets.hideLoder(context);
-        HelperUtils.showSnackBarMessage(
-          context,
-          Strings.invalidPhoneMessage,
-          type: MessageType.error,
-        );
-      }
-    } else if (AppSettings.otpServiceProvider == 'firebase' &&
-        (widget.isDeleteAccount ?? false)) {
-      print("11111111111111111111111111111111111111111");
-      try {
-        await context
-            .read<SendOtpCubit>()
-            .sendFirebaseOTP(phoneNumber: '+$number');
-      } catch (e) {
-        Widgets.hideLoder(context);
-        HelperUtils.showSnackBarMessage(
-          context,
-          Strings.invalidPhoneMessage,
-          type: MessageType.error,
-        );
-      }
-    }
-    final form = _formKey.currentState;
-
-    if (form == null) return;
-    form.save();
-    //checkbox value should be 1 before Login/SignUp
-    try {
-      if (form.validate()) {
-        if (widget.isDeleteAccount ?? false) {
-        } else if (AppSettings.otpServiceProvider == 'firebase') {
-          await context.read<SendOtpCubit>().sendFirebaseOTP(
-                phoneNumber: '+${countryCode!}${mobileNumController.text}',
-              );
-        } else if (AppSettings.otpServiceProvider == 'twilio') {
-          await context.read<SendOtpCubit>().sendTwilioOTP(
-                phoneNumber: '+${countryCode!}${mobileNumController.text}',
-              );
-        }
-      }
-    } catch (e) {
-      Widgets.hideLoder(context);
-      HelperUtils.showSnackBarMessage(context, Strings.invalidPhoneMessage,
-          type: MessageType.error);
-    }
+    debugPrint('sendVerificationCode called (phone OTP removed)');
   }
 
   void onTapLogin(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    try {
-      if (AppSettings.otpServiceProvider == 'firebase') {
-        if (widget.isDeleteAccount ?? false) {
-          await context.read<VerifyOtpCubit>().verifyOTP(
-                verificationId: verificationID,
-                otp: otpIs,
-              );
-          print("11111111222222222222211111111111111");
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setInt('static_key', 1);
-          HiveUtils.setIsNotGuest();
-          Navigator.pushReplacementNamed(
-            context,
-            Routes.main,
-            arguments: {
-              'from': 'login',
-            },
-          ); //Widgets.hideLoder(context);
-        } else {
-          print("111111111111111111111111111111111");
-
-          await context.read<VerifyOtpCubit>().verifyOTP(
-                verificationId: otpVerificationId,
-                otp: otpIs,
-              );
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setInt('static_key', 1);
-          HiveUtils.setIsNotGuest();
-          Navigator.pushReplacementNamed(
-            context,
-            Routes.main,
-            arguments: {
-              'from': 'login',
-            },
-          ); //Widgets.hideLoder(context);
-        }
-      } else if (AppSettings.otpServiceProvider == 'twilio') {
-        await context.read<VerifyOtpCubit>().verifyOTP(
-              otp: otpIs,
-              number: '+${countryCode!}${mobileNumController.text}',
-            );
-      }
-    } catch (e) {
-      Widgets.hideLoder(context);
-      HelperUtils.showSnackBarMessage(context, 'invalidOtp'.translate(context));
-    }
-    if (otpIs.length < otpLength) {
-      HelperUtils.showSnackBarMessage(
-        context,
-        UiUtils.translate(context, 'lblEnterOtp'),
-        messageDuration: 2,
-      );
-      return;
-    }
+    debugPrint('onTapLogin called (phone OTP removed)');
   }
 
   Widget buildNextButton(BuildContext context) {

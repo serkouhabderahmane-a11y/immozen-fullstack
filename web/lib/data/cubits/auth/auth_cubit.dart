@@ -9,9 +9,7 @@ import 'package:immozen/utils/Extensions/extensions.dart';
 import 'package:immozen/utils/api.dart';
 import 'package:immozen/utils/helper_utils.dart';
 import 'package:immozen/utils/hive_utils.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class AuthState {}
@@ -33,63 +31,23 @@ class AuthFailure extends AuthState {
 }
 
 class AuthCubit extends Cubit<AuthState> {
-  //late String name, email, profile, address;
-  AuthCubit() : super(AuthInitial()) {
-    // checkIsAuthenticated();
-  }
+  AuthCubit() : super(AuthInitial());
+
   void checkIsAuthenticated() {
     if (HiveUtils.isUserAuthenticated()) {
-      //setUserData();
       emit(Authenticated(true));
     } else {
       emit(Unauthenticated());
     }
   }
 
-Future<void> updateFCM(BuildContext context) async {
-  try {
-    // Request notification permissions (iOS only)
-    NotificationSettings settings =
-        await FirebaseMessaging.instance.requestPermission();
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      // iOS: Wait until APNS token is ready
-      if (defaultTargetPlatform == TargetPlatform.iOS) {
-        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken == null) {
-          log('APNS token not yet available. Retrying in 2 seconds...');
-          await Future.delayed(const Duration(seconds: 2));
-          return updateFCM(context); // Retry
-        }
-      }
-
-      // Now get FCM token
-      String? token = await FirebaseMessaging.instance.getToken();
-
-      if (token != null) {
-        log('FCM Token: $token');
-
-        await Api.post(
-          url: Api.apiUpdateProfile,
-          parameter: {
-            // Api.userid: HiveUtils.getUserId(),
-            'fcm_id': token,
-          },
-        );
-      } else {
-        log('FCM token is null');
-        throw CustomException('Failed to retrieve FCM token.');
-      }
-    } else {
-      log('Notification permission not granted');
-      throw CustomException('Notification permission not granted.');
+  Future<void> updateFCM(BuildContext context) async {
+    try {
+      log('updateFCM called (FCM removed - no-op)');
+    } catch (e) {
+      log('Error in updateFCM: $e');
     }
-  } catch (e) {
-    log('Error in updateFCM: $e');
-    throw CustomException(e.toString());
   }
-}
-
 
   Future<Map<String, dynamic>> updateUserData(
     BuildContext context, {
@@ -111,7 +69,6 @@ Future<void> updateFCM(BuildContext context) async {
       Api.email: email ?? '',
       Api.address: address ?? '',
       Api.fcmId: fcmToken ?? '',
-      // Api.userid: HiveUtils.getUserId(), //commented-user-id
       'mobile': phone,
       Api.notification: notification,
       'city': city ?? HiveUtils.getCityName(),
@@ -143,9 +100,7 @@ Future<void> updateFCM(BuildContext context) async {
   Future<void> getUserById(
     BuildContext context,
   ) async {
-    final body = <String, String>{
-      // Api.userid: HiveUtils.getUserId().toString(),
-    };
+    final body = <String, String>{};
 
     var response = await HelperUtils.sendApiRequest(
       Api.apigetUserbyId,
@@ -170,7 +125,6 @@ Future<void> updateFCM(BuildContext context) async {
 
     if (getdata != null) {
       if (!getdata[Api.error]) {
-        // Constant.session.setUserData(getdata['data'], "");
         checkIsAuthenticated();
       } else {
         throw CustomException(getdata[Api.message]);

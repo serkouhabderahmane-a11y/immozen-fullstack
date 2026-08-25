@@ -3,11 +3,9 @@ import 'dart:developer';
 import 'package:immozen/data/model/system_settings_model.dart';
 import 'package:immozen/data/repositories/auth_repository.dart';
 import 'package:immozen/exports/main_export.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -584,13 +582,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   UiUtils.translate(context, 'deleteAccount'),
                               svgImagePath: AppIcons.delete,
                               onTap: () {
-                                if (Constant.isDemoModeOn &&
-                                    context
-                                            .read<UserDetailsCubit>()
-                                            .state
-                                            .user
-                                            ?.authId ==
-                                        Constant.demoFirebaseID) {
+                                if (Constant.isDemoModeOn) {
                                   HelperUtils.showSnackBarMessage(
                                     context,
                                     UiUtils.translate(
@@ -870,14 +862,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               () async {
                 unawaited(Widgets.showLoader(context));
                 try {
-                  // throw FirebaseAuthException(code: "requires-recent-login");
-                  if (L == LoginType.phone &&
-                      AppSettings.otpServiceProvider == 'firebase') {
-                    await FirebaseAuth.instance.currentUser?.delete();
-                  }
-                  if (L == LoginType.apple || L == LoginType.google) {
-                    await FirebaseAuth.instance.currentUser?.delete();
-                  }
                   await context.read<DeleteAccountCubit>().deleteAccount(
                         context,
                       );
@@ -886,31 +870,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                   await Navigator.pushReplacementNamed(context, Routes.login);
                 } catch (e) {
                   Widgets.hideLoder(context);
-                  if (e is FirebaseAuthException) {
-                    if (e.code == 'requires-recent-login') {
-                      await UiUtils.showBlurredDialoge(
-                        context,
-                        dialoge: BlurredDialogBox(
-                          title: 'Recent login required'.translate(context),
-                          acceptTextColor: context.color.buttonColor,
-                          showCancleButton: false,
-                          content:
-                              Text('logoutAndLoginAgain'.translate(context))
-                                  .centerAlign(),
-                        ),
-                      );
-                    } else {
-                      await UiUtils.showBlurredDialoge(
-                        context,
-                        dialoge: BlurredDialogBox(
-                          title: 'somethingWentWrng'.translate(context),
-                          acceptTextColor: context.color.buttonColor,
-                          showCancleButton: false,
-                          content: Text(e.message ?? ''),
-                        ),
-                      );
-                    }
-                  }
+                  await UiUtils.showBlurredDialoge(
+                    context,
+                    dialoge: BlurredDialogBox(
+                      title: 'somethingWentWrng'.translate(context),
+                      acceptTextColor: context.color.buttonColor,
+                      showCancleButton: false,
+                      content: Text(e.toString()),
+                    ),
+                  );
                 }
 
                 // Navigator.pushNamed(context, Routes.login,
@@ -1021,50 +989,17 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
           try {
             final L = HiveUtils.getUserLoginType();
-            if (L == LoginType.phone &&
-                AppSettings.otpServiceProvider == 'twilio') {
-              Future.delayed(
-                Duration.zero,
-                () {
-                  Constant.favoritePropertyList.clear();
-                  context.read<UserDetailsCubit>().clear();
-                  context.read<LikedPropertiesCubit>().state.liked.clear();
-                  context.read<LikedPropertiesCubit>().clear();
-                  context.read<LoadChatMessagesCubit>().close();
-                  HiveUtils.logoutUser(context, onLogout: () {});
-                },
-              );
-            }
-            if (L == LoginType.phone &&
-                AppSettings.otpServiceProvider == 'firebase') {
-              Future.delayed(
-                Duration.zero,
-                () {
-                  Constant.favoritePropertyList.clear();
-                  context.read<UserDetailsCubit>().clear();
-                  context.read<LikedPropertiesCubit>().state.liked.clear();
-                  context.read<LikedPropertiesCubit>().clear();
-                  context.read<LoadChatMessagesCubit>().close();
-                  HiveUtils.logoutUser(context, onLogout: () {
-                    Navigator.pushReplacementNamed(context, Routes.login);
-                  }, isRedirect: true);
-                },
-              );
-            }
-            if (L == LoginType.google || L == LoginType.apple) {
-              Future.delayed(
-                Duration.zero,
-                () {
-                  Constant.favoritePropertyList.clear();
-                  context.read<UserDetailsCubit>().clear();
-                  context.read<LikedPropertiesCubit>().state.liked.clear();
-                  context.read<LikedPropertiesCubit>().clear();
-                  context.read<LoadChatMessagesCubit>().close();
-                  HiveUtils.logoutUser(context, onLogout: () {});
-                },
-              );
-              await GoogleSignIn().signOut();
-            }
+            Future.delayed(
+              Duration.zero,
+              () {
+                Constant.favoritePropertyList.clear();
+                context.read<UserDetailsCubit>().clear();
+                context.read<LikedPropertiesCubit>().state.liked.clear();
+                context.read<LikedPropertiesCubit>().clear();
+                context.read<LoadChatMessagesCubit>().close();
+                HiveUtils.logoutUser(context, onLogout: () {});
+              },
+            );
           } catch (e) {
             log('Issue while logout is $e');
           }

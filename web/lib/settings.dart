@@ -132,4 +132,4 @@ enum HomeScreenSections {
   project
 }
 
-enum DeepLinkType { firebase, native }
+enum DeepLinkType { native }

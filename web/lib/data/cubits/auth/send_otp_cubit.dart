@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:immozen/data/repositories/auth_repository.dart';
-
 import 'package:immozen/exports/main_export.dart';
 
 String verificationID = '';
@@ -28,34 +26,12 @@ class SendOtpFailure extends SendOtpState {
 class SendOtpCubit extends Cubit<SendOtpState> {
   SendOtpCubit() : super(SendOtpInitial());
 
-  final AuthRepository _authRepository = AuthRepository();
   Future<void> sendFirebaseOTP({required String phoneNumber}) async {
-    emit(SendOtpInProgress()); print("22222222222222222222222222222");
-    await _authRepository.sendOTP(
-      phoneNumber: phoneNumber,
-      onCodeSent: (verificationId) {
-        verificationID = verificationId;
-        emit(SendOtpSuccess(verificationId: verificationId));
-      },
-      onError: (e) {
-        emit(SendOtpFailure(e.toString()));
-      },
-    ); print("3333333333333333333333333333333333333333333333");
+    emit(SendOtpFailure('Phone OTP login is no longer supported'));
   }
 
   Future<void> sendTwilioOTP({required String phoneNumber}) async {
-    emit(SendOtpInProgress());
-
-    await _authRepository.sendOTP(
-      phoneNumber: phoneNumber,
-      onCodeSent: (verificationId) {
-        verificationID = verificationId;
-        emit(SendOtpSuccess(verificationId: verificationId));
-      },
-      onError: (e) {
-        emit(SendOtpFailure(e.toString()));
-      },
-    );
+    emit(SendOtpFailure('Phone OTP login is no longer supported'));
   }
 
   void setToInitial() {

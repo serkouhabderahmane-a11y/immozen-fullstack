@@ -6,7 +6,6 @@ import 'package:immozen/exports/main_export.dart';
 import 'package:immozen/ui/screens/widgets/bottom_sheets/choose_location_bottomsheet.dart';
 import 'package:immozen/ui/screens/widgets/image_cropper.dart';
 import 'package:immozen/utils/hive_keys.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -75,10 +74,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
     country = HiveUtils.getCountryName();
     placeid = HiveUtils.getCityPlaceId() ?? '';
     phoneController.text = widget.phoneNumber ?? _saperateNumber() ?? '';
-    final firebaseDisplayName = FirebaseAuth.instance.currentUser?.displayName;
-    final firebaseProviderData =
-        FirebaseAuth.instance.currentUser?.providerData.first.displayName;
-    final userName = firebaseDisplayName ?? firebaseProviderData ?? '';
+    final userName = HiveUtils.getUserDetails().name ?? '';
     nameController.text = HiveUtils.getUserDetails().name ?? userName;
     emailController.text = HiveUtils.getUserDetails().email ?? '';
     addressController.text = HiveUtils.getUserDetails().address ?? '';
@@ -642,9 +638,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> process() async {
-    if (Constant.isDemoModeOn &&
-        context.read<UserDetailsCubit>().state.user?.authId ==
-            Constant.demoFirebaseID) {
+    if (Constant.isDemoModeOn) {
       HelperUtils.showSnackBarMessage(
         context,
         UiUtils.translate(context, 'thisActionNotValidDemo'),

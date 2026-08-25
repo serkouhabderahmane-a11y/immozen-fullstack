@@ -2,7 +2,6 @@
 
 import 'package:immozen/data/repositories/auth_repository.dart';
 import 'package:immozen/exports/main_export.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class VerifyOtpState {}
 
@@ -40,26 +39,7 @@ class VerifyOtpCubit extends Cubit<VerifyOtpState> {
     String? number,
   }) async {
     try {
-      if (AppSettings.otpServiceProvider == 'firebase') {
-        emit(VerifyOtpInProgress());
-        final userCredential = await _authRepository.verifyFirebaseOTP(
-          otpVerificationId: verificationId!,
-          otp: otp,
-        );
-        emit(VerifyOtpSuccess(credential: userCredential));
-      } else if (AppSettings.otpServiceProvider == 'twilio') {
-        emit(VerifyOtpInProgress());
-        final credential = await _authRepository.verifyTwilioOTP(
-          number: number!,
-          otp: otp,
-        );
-        final authId = credential['auth_id'];
-        emit(
-          VerifyOtpSuccess(authId: authId, number: number),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      emit(VerifyOtpFailure(ErrorFilter.check(e.code).error));
+      emit(VerifyOtpFailure('Phone OTP login is no longer supported'));
     } catch (e) {
       emit(VerifyOtpFailure(e.toString()));
     }

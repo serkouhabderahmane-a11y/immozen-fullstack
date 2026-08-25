@@ -183,7 +183,6 @@ modM8h9DRzp9OaAJqxfP960q
   static bool isDemoModeOn = false;
   static String demoCountryCode = '253';
   static String demoMobileNumber = '1234567890';
-  static String demoFirebaseID = '6a1Zdl2TxORQGbCazj4XDGfgBBG3';
   static String demoModeOTP = '123456';
 
   static bool adaptThemeColorSvg = true;

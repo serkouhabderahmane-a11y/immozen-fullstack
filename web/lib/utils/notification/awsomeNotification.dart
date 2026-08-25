@@ -48,37 +48,37 @@ class LocalAwsomeNotification {
   }
 
   createNotification({
-    required RemoteMessage notificationData,
+    required dynamic notificationData,
     required bool isLocked,
   }) async {
     try {
-      final isChat = (notificationData.data['type'] == 'chat');
+      final data = notificationData.data ?? {};
+      final isChat = (data['type'] == 'chat');
       var chatId = 0;
       if (isChat) {
-        chatId = int.parse(notificationData.data['sender_id'] ?? '0') +
-            int.parse(notificationData.data['property_id']);
+        chatId = int.parse(data['sender_id'] ?? '0') +
+            int.parse(data['property_id'].toString());
       }
 
       await notification.createNotification(
         content: NotificationContent(
           id: isChat ? chatId : Random().nextInt(5000),
-          title: notificationData.data['title'],
-          // icon: AppIcons.aboutUs,
+          title: data['title'],
           hideLargeIconOnExpand: true,
-          summary: notificationData.data['type'] == 'chat'
-              ? "${notificationData.data['username']}"
+          summary: data['type'] == 'chat'
+              ? "${data['username']}"
               : null,
           locked: isLocked,
-          payload: Map.from(notificationData.data),
+          payload: Map<String, String>.from(data.map((k, v) => MapEntry(k, v.toString()))),
 
-          body: notificationData.data['body'],
+          body: data['body'],
           wakeUpScreen: true,
 
-          notificationLayout: notificationData.data['type'] == 'chat'
+          notificationLayout: data['type'] == 'chat'
               ? NotificationLayout.MessagingGroup
               : NotificationLayout.Default,
-          groupKey: notificationData.data['id'],
-          channelKey: notificationData.data['type'] == 'chat'
+          groupKey: data['id']?.toString(),
+          channelKey: data['type'] == 'chat'
               ? 'Chat Notification'
               : Constant.notificationChannel,
         ),
@@ -89,11 +89,7 @@ class LocalAwsomeNotification {
   }
 
   Future<void> requestPermission() async {
-    final notificationSettings =
-        await FirebaseMessaging.instance.getNotificationSettings();
-
-    if (notificationSettings.authorizationStatus ==
-        AuthorizationStatus.notDetermined) {
+    try {
       await notification.requestPermissionToSendNotifications(
         channelKey: Constant.notificationChannel,
         permissions: [
@@ -114,37 +110,28 @@ class LocalAwsomeNotification {
           NotificationPermission.Light,
         ],
       );
-      if (notificationSettings.authorizationStatus ==
-              AuthorizationStatus.authorized ||
-          notificationSettings.authorizationStatus ==
-              AuthorizationStatus.provisional) {}
-    } else if (notificationSettings.authorizationStatus ==
-        AuthorizationStatus.denied) {
-      return;
+    } catch (e) {
+      // Notifications permission request failed silently
     }
   }
 }
 
 class NotificationController {
-  /// Use this method to detect when a new notification or a schedule is created
   @pragma('vm:entry-point')
   static Future<void> onNotificationCreatedMethod(
     ReceivedNotification receivedNotification,
   ) async {}
 
-  /// Use this method to detect every time that a new notification is displayed
   @pragma('vm:entry-point')
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
   ) async {}
 
-  /// Use this method to detect if the user dismissed a notification
   @pragma('vm:entry-point')
   static Future<void> onDismissActionReceivedMethod(
     ReceivedAction receivedAction,
   ) async {}
 
-  /// Use this method to detect when the user taps on a notification or action button
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
     ReceivedAction receivedAction,
