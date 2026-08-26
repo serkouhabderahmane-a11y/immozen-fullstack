@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "export": "next build",
-    "start": "NODE_ENV=production NODE_PORT=8001 node server.js",
+    "start": "NODE_ENV=production node server.js",
     "custom": "node server.js",
     "hostdev": "next dev --hostname 192.168.0.165",
     "check-keys": "translation-key-purge start"
