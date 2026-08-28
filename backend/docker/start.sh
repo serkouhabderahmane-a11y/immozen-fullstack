@@ -26,6 +26,12 @@ if [ ! -f storage/.migrated ]; then
   touch storage/.migrated
 fi
 
+# Run on every deploy so currency stays set to DJF even when the
+# initial seed has already been applied (existing/restored container).
+if [ -d database/seeders ] && [ -f database/seeders/CurrencySettingSeeder.php ]; then
+  php artisan db:seed --class=CurrencySettingSeeder --force
+fi
+
 php artisan storage:link >/dev/null 2>&1 || true
 rm -f bootstrap/cache/routes-v7.php
 php artisan config:cache

@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                     'type' => 'currency_symbol',
-                    'data' => '€'
+                    'data' => 'DJF'
                 ],
                 [
                     'type' => 'ios_version',
